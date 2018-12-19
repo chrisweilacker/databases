@@ -2,24 +2,24 @@ var Sequelize = require('sequelize');
 var db = require('../db');
 var dbseq = new Sequelize('chat', 'root', 'password', {
   dialect: 'mysql',
-  host: "localhost",
+  host: 'localhost',
   port: 3306,
 });
 
 var User = dbseq.define('Users', {
-  userid:  { type: Sequelize.INTEGER, primaryKey: true, autoIncrement:true },
+  userid: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
   username: Sequelize.STRING
 });
 
 var Message = dbseq.define('Messages', {
-  messageid: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement:true },
+  messageid: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
   userid: Sequelize.INTEGER,
   text: Sequelize.STRING,
   roomid: Sequelize.INTEGER
 });
 
 var Room = dbseq.define('Rooms', {
-  roomid: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement:true },
+  roomid: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
   roomname: Sequelize.STRING
 });
 
@@ -32,18 +32,20 @@ module.exports = {
       if (q.query.data && JSON.parse(q.query.data).where) {
         var where = JSON.parse(q.query.data).where;
         Message.sync()
-        .then(()=> {
-        return Message.findAll({where: where});})
-        .then((results)=>{
+          .then(()=> {
+            return Message.findAll({where: where}); 
+          })
+          .then((results)=>{
             cb({results: results});
-        });
+          });
       } else {
         Message.sync()
-        .then(()=> {
-        return Message.findAll({where: where});})
-        .then((results)=>{
+          .then(()=> {
+            return Message.findAll({where: where});
+          })
+          .then((results)=>{
             cb({results: results});
-        });
+          });
       }
     }, // a function which produces all the messages
 
