@@ -19,10 +19,8 @@ USE chat;
 DROP TABLE IF EXISTS `Users`;
 
 CREATE TABLE `Users` (
-  `userid` INTEGER AUTO_INCREMENT COMMENT 'Primary Key',
-  `firstname` VARCHAR(25) NULL DEFAULT NULL,
-  `lastname` VARCHAR(20) NULL DEFAULT NULL,
-  `email` VARCHAR(40) NULL DEFAULT NULL,
+  `userid` INTEGER AUTO_INCREMENT,
+  `username` VARCHAR(40) UNIQUE,
   PRIMARY KEY (`userid`)
 );
 
@@ -36,7 +34,7 @@ DROP TABLE IF EXISTS `Messages`;
 CREATE TABLE `Messages` (
   `messageid` INTEGER AUTO_INCREMENT,
   `message` VARCHAR(2000) NOT NULL,
-  `userid` INTEGER COMMENT 'Primary Key',
+  `userid` INTEGER,
   `roomid` INTEGER,
   PRIMARY KEY (`messageid`)
 );
@@ -50,7 +48,7 @@ DROP TABLE IF EXISTS `Rooms`;
 
 CREATE TABLE `Rooms` (
   `roomid` INTEGER AUTO_INCREMENT,
-  `roomname` VARCHAR(50) NOT NULL,
+  `roomname` VARCHAR(40) UNIQUE,
   PRIMARY KEY (`roomid`)
 );
 
@@ -73,9 +71,13 @@ ALTER TABLE `Messages` ADD FOREIGN KEY (roomid) REFERENCES `Rooms` (`roomid`);
 -- Test Data
 -- ---
 
--- INSERT INTO `Users` (`userid`,`firstname`,`lastname`,`email`) VALUES
--- ('','','','');
--- INSERT INTO `Messages` (`messageid`,`message`,`userid`,`roomid`) VALUES
--- ('','','','');
--- INSERT INTO `Rooms` (`roomid`,`roomname`) VALUES
--- ('','');
+INSERT INTO `Users` (`userid`,`username`) VALUES
+(1,'ANON');
+INSERT INTO `Rooms` (`roomid`, `roomname`) VALUES
+(1, 'All');
+INSERT INTO `Rooms` (`roomid`, `roomname`) VALUES
+(2, 'Dog');
+INSERT INTO `Messages` (`messageid`,`message`,`userid`,`roomid`) VALUES
+(1,'This is a test message',1,1);
+INSERT INTO `Messages` (`messageid`,`message`,`userid`,`roomid`) VALUES
+(2,'This is a test message in the Dog Room',1,2);
