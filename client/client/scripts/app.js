@@ -23,7 +23,7 @@ var App = {
       // examine the response from the server request:
       $('#chats').empty();
       console.log(data);
-      for (var i = 0; i<data.results.length; i++) {
+      for (var i = 0; i < data.results.length; i++) {
         var rm = data.results[i].roomname;
 
         if (rm) {
@@ -60,7 +60,7 @@ var App = {
     App.$spinner.fadeOut('fast');
     FormView.setStatus(false);
   },
-  escape : function(string) {
+  escape: function(string) {
     var result = string;
     result = result.replace(/&/g, '&amp;');
     result = result.replace(/</g, '&lt;');

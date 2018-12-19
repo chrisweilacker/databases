@@ -21,6 +21,8 @@ DROP TABLE IF EXISTS `Users`;
 CREATE TABLE `Users` (
   `userid` INTEGER AUTO_INCREMENT,
   `username` VARCHAR(40) UNIQUE,
+  `createdAt` DATETIME not null,
+  `updatedAt` DATETIME not null,
   PRIMARY KEY (`userid`)
 );
 
@@ -33,9 +35,11 @@ DROP TABLE IF EXISTS `Messages`;
 
 CREATE TABLE `Messages` (
   `messageid` INTEGER AUTO_INCREMENT,
-  `message` VARCHAR(2000) NOT NULL,
+  `text` VARCHAR(2000) NOT NULL,
   `userid` INTEGER,
   `roomid` INTEGER,
+  `createdAt` DATETIME not null,
+  `updatedAt` DATETIME not null,
   PRIMARY KEY (`messageid`)
 );
 
@@ -49,6 +53,8 @@ DROP TABLE IF EXISTS `Rooms`;
 CREATE TABLE `Rooms` (
   `roomid` INTEGER AUTO_INCREMENT,
   `roomname` VARCHAR(40) UNIQUE,
+  `createdAt` DATETIME not null,
+  `updatedAt` DATETIME not null,
   PRIMARY KEY (`roomid`)
 );
 
@@ -71,13 +77,13 @@ ALTER TABLE `Messages` ADD FOREIGN KEY (roomid) REFERENCES `Rooms` (`roomid`);
 -- Test Data
 -- ---
 
-INSERT INTO `Users` (`userid`,`username`) VALUES
-(1,'ANON');
-INSERT INTO `Rooms` (`roomid`, `roomname`) VALUES
-(1, 'All');
-INSERT INTO `Rooms` (`roomid`, `roomname`) VALUES
-(2, 'Dog');
-INSERT INTO `Messages` (`messageid`,`message`,`userid`,`roomid`) VALUES
-(1,'This is a test message',1,1);
-INSERT INTO `Messages` (`messageid`,`message`,`userid`,`roomid`) VALUES
-(2,'This is a test message in the Dog Room',1,2);
+INSERT INTO `Users` (`userid`,`username`, `createdAt`, `updatedAt`) VALUES
+(1,'ANON', sysdate(), sysdate());
+INSERT INTO `Rooms` (`roomid`, `roomname`, `createdAt`, `updatedAt`) VALUES
+(1, 'All', sysdate(), sysdate());
+INSERT INTO `Rooms` (`roomid`, `roomname`, `createdAt`, `updatedAt`) VALUES
+(2, 'Dog', sysdate(), sysdate());
+INSERT INTO `Messages` (`messageid`,`text`,`userid`,`roomid`, `createdAt`, `updatedAt`) VALUES
+(1,'This is a test message',1,1, sysdate(), sysdate());
+INSERT INTO `Messages` (`messageid`,`text`,`userid`,`roomid`, `createdAt`, `updatedAt`) VALUES
+(2,'This is a test message in the Dog Room',1,2, sysdate(), sysdate());

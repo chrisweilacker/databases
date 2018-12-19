@@ -14,6 +14,6 @@ var MessagesView = {
     $chat.append(html);
     var $username = $('.username');
     $username.off();
-    $username.on( "click", Friends.toggleStatus );
+    $username.on( 'click', Friends.toggleStatus );
   }
 };

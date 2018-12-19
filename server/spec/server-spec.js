@@ -16,7 +16,7 @@ describe('Persistent Node Chat Server', function() {
     });
     dbConnection.connect();
 
-       var tablename = "messages"; // TODO: fill this out
+    var tablename = 'messages'; // TODO: fill this out
 
     /* Empty the db table before each test so that multiple tests
      * (or repeated runs of the tests) won't screw each other up: */
@@ -67,8 +67,8 @@ describe('Persistent Node Chat Server', function() {
 
   it('Should output all messages from the DB', function(done) {
     // Let's insert a message into the db
-       var queryString = "INSERT INTO messages (message, userid, roomid) VALUES ('Men like you can never change!',1,1)";
-       var queryArgs = [];
+    var queryString = 'INSERT INTO messages (message, userid, roomid) VALUES (\'Men like you can never change!\',1,1)';
+    var queryArgs = [];
     // TODO - The exact query string and query args to use
     // here depend on the schema you design, so I'll leave
     // them up to you. */
@@ -88,11 +88,11 @@ describe('Persistent Node Chat Server', function() {
   });
 
   it('Should output users from the DB', function(done) {
-      request('http://127.0.0.1:3000/classes/users', function(error, response, body) {
-        var users = JSON.parse(body);
-        expect(users.results[0].username).to.equal('ANON');
-        expect(users.results[1].username).to.equal('Valjean');
-        done();
-      });
+    request('http://127.0.0.1:3000/classes/users', function(error, response, body) {
+      var users = JSON.parse(body);
+      expect(users.results[0].username).to.equal('ANON');
+      expect(users.results[1].username).to.equal('Valjean');
+      done();
+    });
   });
 });
