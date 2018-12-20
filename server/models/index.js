@@ -36,7 +36,7 @@ module.exports = {
       if (q.query.data && JSON.parse(q.query.data).where) {
         var where = JSON.parse(q.query.data).where;
         Message.sync()
-        .then(()=> {
+          .then(()=> {
             return Message.findAll({where: where,
               attributes: {
                 include: [[Sequelize.literal('User.username'), 'username'], [Sequelize.literal('Room.roomname'), 'roomname']],
@@ -49,7 +49,7 @@ module.exports = {
           });
       } else {
         Message.sync()
-        .then(()=> {
+          .then(()=> {
             return Message.findAll({attributes: {
               include: [[Sequelize.literal('User.username'), 'username'], [Sequelize.literal('Room.roomname'), 'roomname']],
             },
@@ -62,28 +62,41 @@ module.exports = {
     }, // a function which produces all the messages
 
     post: function (message, cb) {
-      var usertoAdd, roomtoAdd;
-       User.findOne({
-          where: {username: message.username.toUpperCase()}
-        }).then(theUser => {
-          if (theUser) {
-            usertoAdd=theUser;
+      var usertoAdd; var roomtoAdd;
+      User.findOne({
+        where: {username: message.username.toUpperCase()}
+      }).then(theUser => {
+        if (theUser) {
+          usertoAdd = theUser;
+          return Room.findOne({
+            where: {roomname: message.roomname.toUpperCase()}
+          });
+        } else {
+          return User.create({
+            username: message.username.toUpperCase()
+          }).then(theUser => {
+            usertoAdd = theUser;
             return Room.findOne({
               where: {roomname: message.roomname.toUpperCase()}
             });
-          } else {
-            return User.create({
-              username: message.username.toUpperCase()
-            }).then(theUser => {
-              usertoAdd=theUser;
-              return Room.findOne({
-                where: {roomname: message.roomname.toUpperCase()}
-              });
-            })
-          }
+          });
+        }
 
-        }).then(theRoom => {
-          if (theRoom) {
+      }).then(theRoom => {
+        if (theRoom) {
+          roomtoAdd = theRoom;
+          Message.create({
+            text: message.text,
+            RoomId: roomtoAdd.id,
+            UserId: usertoAdd.id
+          }).then(()=> {
+            console.log('message posted');
+            cb('succesffuly posted message');
+          });
+        } else {
+          Room.create({
+            roomname: message.roomname.toUpperCase()
+          }).then(theRoom => {
             roomtoAdd = theRoom;
             Message.create({
               text: message.text,
@@ -91,28 +104,15 @@ module.exports = {
               UserId: usertoAdd.id
             }).then(()=> {
               console.log('message posted');
-              cb('succesffuly posted message')
+              cb('succesffuly posted message');
             });
-          } else {
-            Room.create({
-              roomname: message.roomname.toUpperCase()
-            }).then(theRoom => {
-              roomtoAdd = theRoom;
-              Message.create({
-                text: message.text,
-                RoomId: roomtoAdd.id,
-                UserId: usertoAdd.id
-              }).then(()=> {
-                console.log('message posted');
-                cb('succesffuly posted message')
-              });
 
-            });
-          }
-        }).catch((err)=>{
-          console.log(err);
-          if (err) { cb (err)};
-        });
+          });
+        }
+      }).catch((err)=>{
+        console.log(err);
+        if (err) { cb (err); }
+      });
     }
   },
 
@@ -123,7 +123,7 @@ module.exports = {
       if (q.query.data && JSON.parse(q.query.data).where) {
         var where = JSON.parse(q.query.data).where;
         User.sync()
-        .then(()=> {
+          .then(()=> {
             return User.findAll({where: where});
           })
           .then((results)=>{
@@ -131,14 +131,14 @@ module.exports = {
           });
       } else {
         User.sync()
-        .then(()=> {
-          User.findAll()
-          .then((results)=>{
-            cb({results: results});
+          .then(()=> {
+            User.findAll()
+              .then((results)=>{
+                cb({results: results});
+              });
           });
-      });
-    }
-  },
+      }
+    },
     post: function (username, cb) {
       User.findOne({
         username: username.toUpperCase()
@@ -155,7 +155,7 @@ module.exports = {
         if (err) {
           cb(err);
         }
-      })
+      });
     }
   },
   rooms: {
@@ -164,7 +164,7 @@ module.exports = {
       if (q.query.data && JSON.parse(q.query.data).where) {
         var where = JSON.parse(q.query.data).where;
         Room.sync()
-        .then(()=> {
+          .then(()=> {
             return Room.findAll({where: where});
           })
           .then((results)=>{
@@ -172,12 +172,12 @@ module.exports = {
           });
       } else {
         User.sync()
-        .then(()=> {
-          User.findAll()
-          .then((results)=>{
-            cb({results: results});
+          .then(()=> {
+            User.findAll()
+              .then((results)=>{
+                cb({results: results});
+              });
           });
-        });
       }
     },
     post: function (roomname, cb) {
@@ -196,7 +196,7 @@ module.exports = {
         if (err) {
           cb(err);
         }
-      })
+      });
     }
   }
 };

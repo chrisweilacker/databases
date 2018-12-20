@@ -25,15 +25,15 @@ module.exports = {
       var message = req.body;
       console.log('Message Recieved', message);
       if (!message.roomname) {
-        message.room = "All";
+        message.room = 'All';
         message.roomid = 1;
       }
       if (!message.username) {
-        message.username = "Anon";
+        message.username = 'Anon';
         message.userid = 1;
       }
       models.messages.post(message, (response)=>{
-        console.log('message supposedly posted')
+        console.log('message supposedly posted');
         res.send(response);
       });
 

@@ -4,11 +4,11 @@ module.exports = {
   messages: {
     get: function (q, cb) {
 
-      var queryString= 'SELECT message as text, username, roomname FROM messages m, users u, rooms r ' +
+      var queryString = 'SELECT message as text, username, roomname FROM messages m, users u, rooms r ' +
       'Where m.roomid=r.roomid AND m.userid = u.userid';
       if (q.query.data && JSON.parse(q.query.data).where) {
         var where = JSON.parse(q.query.data).where;
-        queryString += ` AND r.roomname = "${where.room}";`
+        queryString += ` AND r.roomname = "${where.room}";`;
       } else {
         queryString += ';';
       }
@@ -26,9 +26,9 @@ module.exports = {
     post: function (message, cb) {
       var queryString = 'INSERT INTO messages (message, roomid, userid) VALUES ("' + message.text + '", ';
       if (message.roomid) {
-        queryString += message.roomid + ', '
+        queryString += message.roomid + ', ';
         if (message.userid) {
-          queryString +=  message.userid + ');';
+          queryString += message.userid + ');';
           db.dbConnection.query(queryString, (err, results) => {
             if (err) {
               console.log(err);
@@ -39,7 +39,7 @@ module.exports = {
           });
         } else {
           this.getUserId(message.username, (userId) => {
-            queryString +=  userId + ');';
+            queryString += userId + ');';
             db.dbConnection.query(queryString, (err, results) => {
               if (err) {
                 console.log(err);
@@ -54,7 +54,7 @@ module.exports = {
         this.getRoomId(message.roomname, (roomId) => {
           queryString += roomId + ', ';
           if (message.userid) {
-            queryString +=  message.userid + ');';
+            queryString += message.userid + ');';
             db.dbConnection.query(queryString, (err, results) => {
               if (err) {
                 console.log(err);
@@ -65,7 +65,7 @@ module.exports = {
             });
           } else {
             this.getUserId(message.username, (userId) => {
-              queryString +=  userId + ');';
+              queryString += userId + ');';
               console.log(queryString);
               db.dbConnection.query(queryString, (err, results) => {
                 if (err) {
@@ -75,7 +75,7 @@ module.exports = {
                   cb('Message Posted');
                 }
               });
-            })
+            });
           }
 
         });
@@ -89,9 +89,9 @@ module.exports = {
           cb(null);
         } else {
           if (results[0]) {
-          cb(results[0].userid);
+            cb(results[0].userid);
           } else {
-            queryString = `INSERT INTO users (username) VALUES ("${username}");`
+            queryString = `INSERT INTO users (username) VALUES ("${username}");`;
             db.dbConnection.query(queryString, (err, results) => {
               if (err) {
                 console.log(err);
@@ -114,7 +114,7 @@ module.exports = {
           if (results[0]) {
             cb(results[0].roomid);
           } else {
-            queryString = `INSERT INTO rooms (roomname) VALUES ("${roomname}");`
+            queryString = `INSERT INTO rooms (roomname) VALUES ("${roomname}");`;
             db.dbConnection.query(queryString, (err, results) => {
               if (err) {
                 console.log(err);
@@ -132,10 +132,10 @@ module.exports = {
   users: {
     // Ditto as above.
     get: function (q, cb) {
-      var queryString= 'SELECT userid, username FROM users'
+      var queryString = 'SELECT userid, username FROM users';
       if (q.query.data && JSON.parse(q.query.data).where) {
         var where = JSON.parse(q.query.data).where;
-        queryString += ` AND username = "${where.username}";`
+        queryString += ` AND username = "${where.username}";`;
       } else {
         queryString += ';';
       }
