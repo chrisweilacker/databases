@@ -95,4 +95,27 @@ describe('Persistent Node Chat Server', function() {
       done();
     });
   });
+
+  it('Should output rooms from the DB', function(done) {
+    request('http://127.0.0.1:3000/classes/rooms', function(error, response, body) {
+      var rooms = JSON.parse(body);
+      expect(rooms.results[0].roomname).to.equal('ALL');
+      expect(rooms.results[2].roomname).to.equal('HELLO');
+      done();
+    });
+  });
+
+  it('Should insert a room into the DB', function(done) {
+    request({
+      method: 'POST',
+      uri: 'http://127.0.0.1:3000/classes/rooms',
+      json: { roomname: 'MYROOM' }
+      }, function () {
+      request('http://127.0.0.1:3000/classes/rooms', function(error, response, body) {
+        var rooms = JSON.parse(body);
+        expect(rooms.results[rooms.results.length-1].roomname).to.equal('MYROOM');
+        done();
+      });
+    });
+  });
 });

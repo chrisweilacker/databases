@@ -141,13 +141,15 @@ module.exports = {
     },
     post: function (username, cb) {
       User.findOne({
-        username: username.toUpperCase()
+        where: {username: username.toUpperCase()}
       }). then(theUser => {
         if (!theUser) {
           User.create({
             username: username.toUpperCase()
+          })
+          .then(()=>{
+            cb('Sucess');
           });
-          cb('Sucess');
         } else {
           cb('Alread Exists');
         }
@@ -171,9 +173,9 @@ module.exports = {
             cb({results: results});
           });
       } else {
-        User.sync()
+        Room.sync()
           .then(()=> {
-            User.findAll()
+            Room.findAll()
               .then((results)=>{
                 cb({results: results});
               });
@@ -182,13 +184,16 @@ module.exports = {
     },
     post: function (roomname, cb) {
       Room.findOne({
-        roomname: roomname.toUpperCase()
-      }). then(theRoom => {
+        where: {roomname: roomname.toUpperCase()}
+      }).then(theRoom => {
+        console.log('theRoom value', theRoom);
         if (!theRoom) {
           Room.create({
             roomname: roomname.toUpperCase()
+          })
+          .then(()=>{
+            cb('Sucess');
           });
-          cb('Sucess');
         } else {
           cb('Alread Exists');
         }

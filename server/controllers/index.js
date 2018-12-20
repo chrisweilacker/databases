@@ -61,8 +61,20 @@ module.exports = {
 
   rooms: {
     // Ditto as above
-    get: function (req, res) {},
-    post: function (req, res) {}
-  },
+    get: function (req, res) {
+      res.type('application/json');
+      var q = url.parse(req.url, true);
+      models.rooms.get(q, (results) => {
+        res.send(JSON.stringify(results));
+      });
+    },
+    post: function (req, res) {
+      res.type('plain/text');
+      console.log('Adding Room:', req.body.roomname);
+      models.rooms.post(req.body.roomname, (results) => {
+        res.send(results);
+      });
+    }
+  }
 };
 
